@@ -14,13 +14,13 @@ async function main() {
   // await hre.run('compile');
 
   // We get the contract to deploy
-  const BluesTranslationProxy = await ethers.getContractFactory("BluesTranslationProxy");
-  const bluesTranslationProxy = await BluesTranslationProxy.deploy();
+  const BluesAggregator = await ethers.getContractFactory("BluesAggregator");
+  const bluesAggregator = await BluesAggregator.deploy("0xb0dAdB9dCc2A3ABDf7fd814A99427B0731A01e57", "0xCDf025570C270146507Fe6eE9F96574dca43fbDe");
 
-  const transaction = await bluesTranslationProxy.deployed();
+  const transaction = await bluesAggregator.deployed();
 
   console.log("Transaction:", transaction);
-  console.log("BluesTranslationProxy deployed to:", bluesTranslationProxy.address);
+  console.log("BluesAggregator deployed to:", bluesAggregator.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

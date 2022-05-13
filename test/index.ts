@@ -1,19 +1,25 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
 
-describe("Greeter", function () {
-  it("Should return the new greeting once it's changed", async function () {
-    const Greeter = await ethers.getContractFactory("Greeter");
-    const greeter = await Greeter.deploy("Hello, world!");
-    await greeter.deployed();
+describe("ERC721Safe", function () {
+  it("Should bew accessible with multicall", async function () {
+    const Multicall = await ethers.getContractFactory("Multicall");
+    const multicall = await Multicall.deploy();
+    await multicall.deployed()
+    
+    const NFT = await ethers.getContractFactory("NFT");
+    const nft = await NFT.deploy();
+    await nft.deployed();
+    console.log(nft.address);
 
-    expect(await greeter.greet()).to.equal("Hello, world!");
+    const ERC721Safe = await ethers.getContractFactory("ERC721Safe");
+    const proxy = await ERC721Safe.deploy(nft.address);
+    await proxy.deployed();
+    
+    await nft.mint()
 
-    const setGreetingTx = await greeter.setGreeting("Hola, mundo!");
-
-    // wait until the transaction is mined
-    await setGreetingTx.wait();
-
-    expect(await greeter.greet()).to.equal("Hola, mundo!");
+    const multicallData = await nft.interface.encodeFunctionData("ownerOf", [9999]);
+    const result = await multicall.aggregate([{target: proxy.address, callData: multicallData}]);
+    console.log(result.data);
   });
 });
