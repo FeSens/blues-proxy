@@ -13,6 +13,6 @@ contract NFT is ERC721 {
 	function mint() external returns (uint256) {
 		_mint(msg.sender, _tokenIds.current());
 		_tokenIds.increment();
-		return 2131; //_tokenIds.current();
+		return _tokenIds.current() - 1;
 	}
 }
